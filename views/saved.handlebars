@@ -1,28 +1,37 @@
+<!--Saved Articles Page-->
+
 <div class="container">
-    <div class="row text-center">
-        <div class="col-xs-12">
-            <h1>Saved Articles</h1>
-        </div>
+
+    <div class="col-md-12 jumbotron">
+        
     </div>
-    <div class="row" style="padding-bottom:2%;">
-         <div class="col-xs-12">
-             <a href="/"><button style="float-left;">Home</button></a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div id="articles" style="padding-right:3%;">
-            {{#each saved}}
-                <button data-id={{this._id}} class="delete-article" style="padding: 3px 6px; float:right;">Delete from Saved</button>
-                <button data-id={{this._id}} class="note-comment" style="padding: 3px 6px; float:right; margin-right:.5%">Article Notes</button>
-                <h4><strong>{{this.title}}</strong></h4>
-                <a href="{{this.link}}">{{this.link}}</a>  
-                {{#if this.excerpt}}
-                    <h5>{{this.excerpt}}</h5>
-                {{/if}}
-                  <hr>
+    <div class="col-md-12">
+        {{#if article}}
+            {{#each article}}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>{{this.title}}</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p> {{this.summary}}</p>
+                        <a href={{this.link}} target="_blank">{{this.link}}</a>
+                        <br><br>
+                        <button type="button" class="btn addNote" data-toggle="modal" data-target="#noteModal{{this._id}}" data-id={{this._id}}>View/Add Notes</button>
+                        <button type="button" class="btn delete" data-id={{this._id}}>Delete</button>
+                    </div>
+                </div>
             {{/each}}
+        {{else}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>You have no saved articles.</h4>
             </div>
         </div>
+        {{/if}}
     </div>
 </div>
+
+<!--Clicked Notes Modal-->
+{{#each article}}
+    {{> notes-modal }}
+{{/each}}
