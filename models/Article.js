@@ -9,11 +9,16 @@ var ArticleSchema = new Schema({
         type: String,
         required: true//title is required and a string
     },
-
+    
     link: {
         type: String,
         required: true
     },//link is required and is a string
+
+    summary: {
+        type: String,
+        reqired: true
+    },
 
     note: {//<<==this is what we reference to populate not the "Note" below 
         type: Schema.Types.ObjectId,

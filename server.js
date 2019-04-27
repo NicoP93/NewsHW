@@ -27,34 +27,33 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 
 
-//var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";//Is this in the correct spot?
-//mongoose.connect(MONGODB_URI);
-mongoose.connect("mongodb://localhost/GameReviewDB", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";//Is this in the correct spot?
+mongoose.connect(MONGODB_URI);
+// mongoose.connect("mongodb://localhost/GameReviewDB", { useNewUrlParser: true });
 
 // Routes
 
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
-    debugger;
+
   // First, we grab the body of the html with axios
   axios.get("http://www.gameinformer.com/reviews/").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
-debugger;
+  
+  
     // Now, we grab every h2 within an article tag, and do the following:
-    $("h2.page-title").each(function(i, element) {
+    $(".teaser-right-wrapper").each(function(i, element) {
         
       // Save an empty result object
       var result = {};
-      var string = ("https://www.gameinformer.com")
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
-        .children("a")
-        .text();
-      result.link = $(this)
-          .children("a")
-          .attr("href");
-
+      result.title = $(this).children("h2.page-title").text();
+        
+      result.link = "https://www.gameinformer.com" + $(this).children("h2.page-title").children("a").attr("href");
+          
+      result.summary = $(this).children(".promo-summary").text();
+    
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
         .then(function(dbArticle) {
@@ -66,7 +65,7 @@ debugger;
           console.log(err);
         });
     });
-
+  
     // Send a message to the client
     res.send("Scrape Complete");
   });
